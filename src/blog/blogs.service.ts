@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Blog } from './blog.entity';
 
 @Injectable()
-export class BlogService {
+export class BlogsService {
 
     constructor(
         @InjectRepository(Blog)

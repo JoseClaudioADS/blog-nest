@@ -1,17 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { BlogService } from './blog.service';
+import { BlogsService } from './blogs.service';
 
 @Controller('blog')
 export class BlogController {
 
-    constructor (private readonly blogService: BlogService) {
+    constructor (private readonly blogsService: BlogsService) {
 
     }
 
     @Get()
     async findAll(): Promise<string> {
 
-        const resp = await this.blogService.findAll();
+        const resp = await this.blogsService.findAll();
 
         console.log(resp);
 
