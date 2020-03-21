@@ -12,8 +12,13 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async findByUserName(username: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({where: {username}});
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({where: {email}});
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const count = await this.usersRepository.count({where: {email}});
+    return count > 0;
   }
 
   async save (dto: CreateUserDTO) {
