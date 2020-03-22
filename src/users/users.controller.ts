@@ -21,7 +21,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { ValidationExceptionFilter } from 'src/helpers/filters/validation-exception.filter';
+import { ValidationExceptionFilter } from '../helpers/filters/validation-exception.filter';
 
 @Controller('users')
 export class UsersController {

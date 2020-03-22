@@ -9,8 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-const { promisify } = require('util');
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 import { BlogsService } from './blogs.service';
 
 @Injectable()

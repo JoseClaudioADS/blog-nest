@@ -16,9 +16,9 @@ import {
 } from '@nestjs/common';
 import * as Yup from 'yup';
 import { BlogsService } from './blogs.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateBlogDTO } from './dto/create-blog.dto';
-import { ValidationExceptionFilter } from 'src/helpers/filters/validation-exception.filter';
+import { ValidationExceptionFilter } from '../helpers/filters/validation-exception.filter';
 import { UpdateBlogDTO } from './dto/update-blog.dto';
 import { BlogPolicyInterceptor } from './blogs-policy.interceptor';
 
