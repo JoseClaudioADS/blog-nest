@@ -1,4 +1,19 @@
-import { Controller, Get, Request, UseGuards, Post, Body, HttpCode, Res, HttpStatus, HttpException, Put, Header, Param, UseFilters } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Request,
+  UseGuards,
+  Post,
+  Body,
+  HttpCode,
+  Res,
+  HttpStatus,
+  HttpException,
+  Put,
+  Header,
+  Param,
+  UseFilters,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as Yup from 'yup';
 import { Response } from 'express';
@@ -10,7 +25,6 @@ import { ValidationExceptionFilter } from 'src/helpers/filters/validation-except
 
 @Controller('users')
 export class UsersController {
-
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
@@ -22,12 +36,15 @@ export class UsersController {
   @Post()
   @Header('Cache-Control', 'none')
   @HttpCode(201)
-  async store (@Body() createUserDTO: CreateUserDTO, @Res() res: Response) {
-
-    const existsByEmail = await this.usersService.existsByEmail(createUserDTO.email);
+  async store(@Body() createUserDTO: CreateUserDTO, @Res() res: Response) {
+    const existsByEmail = await this.usersService.existsByEmail(
+      createUserDTO.email,
+    );
     if (existsByEmail) {
-
-      throw new HttpException({error: "Email already used"}, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { error: 'Email already used' },
+        HttpStatus.BAD_REQUEST,
+      );
 
       //Alternative
       //return res.status(HttpStatus.BAD_REQUEST).json({error: "Email already used"});
@@ -36,35 +53,46 @@ export class UsersController {
     createUserDTO.password = await bcrypt.hash(createUserDTO.password, 5);
 
     this.usersService.save(createUserDTO);
-    return "Created";
+    return 'Created';
   }
 
-  @Put(":id")
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
   @UseFilters(ValidationExceptionFilter)
-  async update (@Param("id") id: string, @Body() updateUserDTO: UpdateUserDTO) {
-
+  async update(@Param('id') id: string, @Body() updateUserDTO: UpdateUserDTO) {
     const userDb = await this.usersService.findById(id);
 
     if (!userDb) {
-      throw new HttpException({error: "User not found"}, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        { error: 'User not found' },
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const schemaValidation = Yup.object().shape({
-      name: Yup.string().max(200).required(),
-      email: Yup.string().email().required("Email is required")
+      name: Yup.string()
+        .max(200)
+        .required(),
+      email: Yup.string()
+        .email()
+        .required('Email is required'),
     });
 
-    await schemaValidation.validate(updateUserDTO, {abortEarly: false});
+    await schemaValidation.validate(updateUserDTO, { abortEarly: false });
 
-    const existsByEmailDifferentId = await this.usersService.existsByEmailDifferentId(updateUserDTO.email, id);
+    const existsByEmailDifferentId = await this.usersService.existsByEmailDifferentId(
+      updateUserDTO.email,
+      id,
+    );
 
     if (existsByEmailDifferentId) {
-
-      throw new HttpException({error: "Email already used by another account"}, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { error: 'Email already used by another account' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     Object.assign(userDb, updateUserDTO);
     await this.usersService.save(userDb);
   }
-
 }
