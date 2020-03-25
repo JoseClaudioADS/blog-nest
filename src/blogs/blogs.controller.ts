@@ -13,6 +13,7 @@ import {
   Post,
   Delete,
   UseInterceptors,
+  Render,
 } from '@nestjs/common';
 import * as Yup from 'yup';
 import { BlogsService } from './blogs.service';
@@ -93,5 +94,12 @@ export class BlogController {
       );
     }
     await this.blogsService.delete(id);
+  }
+
+  @Get('blogsView')
+  @Render('blog/blogs')
+  async blogs() {
+    const allBlogs = await this.blogsService.findAllWithoutUser();
+    return { blogs: allBlogs };
   }
 }
