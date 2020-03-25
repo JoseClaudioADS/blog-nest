@@ -13,6 +13,8 @@ import {
   Header,
   Param,
   UseFilters,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as Yup from 'yup';
@@ -31,6 +33,13 @@ export class UsersController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async index(@Request() req) {
+    return await this.usersService.findById(req.user.id);
   }
 
   @Post()
