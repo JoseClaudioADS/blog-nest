@@ -5,9 +5,11 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { Response } from 'express';
 
 @Controller()
 export class AuthController {
@@ -16,7 +18,8 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   @HttpCode(HttpStatus.OK)
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  login(@Request() req, @Res() res: Response) {
+    const token = this.authService.login(req.user);
+    res.json(token).send();
   }
 }

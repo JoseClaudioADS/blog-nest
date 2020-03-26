@@ -61,8 +61,8 @@ export class UsersController {
 
     createUserDTO.password = await bcrypt.hash(createUserDTO.password, 5);
 
-    this.usersService.save(createUserDTO);
-    return 'Created';
+    await this.usersService.save(createUserDTO);
+    res.send();
   }
 
   @UseGuards(JwtAuthGuard)
